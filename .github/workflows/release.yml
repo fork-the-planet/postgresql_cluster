@@ -48,7 +48,7 @@ jobs:
           sed -i "s/version: ${VERSION_PATTERN}/version: ${TAG}/" \
             automation/README.md
 
-          # Update console docker-compose.yml image tags
+          # Update console docker-compose image tags
           sed -i "s/autobase\/console_api:${VERSION_PATTERN}/autobase\/console_api:${TAG}/g" \
             console/docker-compose.yml
           sed -i "s/autobase\/console_ui:${VERSION_PATTERN}/autobase\/console_ui:${TAG}/g" \
@@ -56,13 +56,26 @@ jobs:
           sed -i "s/autobase\/console_db:${VERSION_PATTERN}/autobase\/console_db:${TAG}/g" \
             console/docker-compose.yml
 
-          # Update console docker-compose.caddy.yml image tags
           sed -i "s/autobase\/console_api:${VERSION_PATTERN}/autobase\/console_api:${TAG}/g" \
             console/docker-compose.caddy.yml
           sed -i "s/autobase\/console_ui:${VERSION_PATTERN}/autobase\/console_ui:${TAG}/g" \
             console/docker-compose.caddy.yml
           sed -i "s/autobase\/console_db:${VERSION_PATTERN}/autobase\/console_db:${TAG}/g" \
             console/docker-compose.caddy.yml
+
+          sed -i "s/autobase\/console_api_ee:${VERSION_PATTERN}/autobase\/console_api_ee:${TAG}/g" \
+            console/docker-compose.enterprise.yml
+          sed -i "s/autobase\/console_ui_ee:${VERSION_PATTERN}/autobase\/console_ui_ee:${TAG}/g" \
+            console/docker-compose.enterprise.yml
+          sed -i "s/autobase\/console_db:${VERSION_PATTERN}/autobase\/console_db:${TAG}/g" \
+            console/docker-compose.enterprise.yml
+
+          sed -i "s/autobase\/console_api_ee:${VERSION_PATTERN}/autobase\/console_api_ee:${TAG}/g" \
+            console/docker-compose.enterprise.ssl.yml
+          sed -i "s/autobase\/console_ui_ee:${VERSION_PATTERN}/autobase\/console_ui_ee:${TAG}/g" \
+            console/docker-compose.enterprise.ssl.yml
+          sed -i "s/autobase\/console_db:${VERSION_PATTERN}/autobase\/console_db:${TAG}/g" \
+            console/docker-compose.enterprise.ssl.yml
 
           # Update console service VERSION file
           echo "${TAG}" > console/service/VERSION
@@ -95,6 +108,8 @@ jobs:
             automation/README.md \
             console/docker-compose.yml \
             console/docker-compose.caddy.yml \
+            console/docker-compose.enterprise.yml \
+            console/docker-compose.enterprise.ssl.yml \
             console/service/VERSION \
             console/service/README.md \
             console/service/api/swagger.yaml \
