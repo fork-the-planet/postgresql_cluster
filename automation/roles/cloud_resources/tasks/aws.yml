@@ -397,6 +397,9 @@
             secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
             region: "{{ server_location }}"
             name: "{{ server_name | lower }}{{ '%02d' % (idx + 1) }}"
+            tags:
+              Name: "{{ server_name | lower }}{{ '%02d' % (idx + 1) }}"
+              Cluster: "{{ patroni_cluster_name }}"
             filters:
               spot-instance-request-id: "{{ item.spot_request.spot_instance_request_id }}"
           loop: "{{ ec2_spot_request_result.results }}"
@@ -653,9 +656,14 @@
       amazon.aws.ec2_instance:
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-        name: "{{ server_name | lower }}{{ '%02d' % (idx + 1) }}"
         region: "{{ server_location }}"
+        filters:
+          instance-type: "{{ server_type }}"
+          instance-state-name: ["pending", "running", "shutting-down", "stopping", "stopped"]
+          "tag:Name": "{{ server_name | lower }}{{ '%02d' % (idx + 1) }}"
+          "tag:Cluster": "{{ patroni_cluster_name }}"
         state: absent
+        wait: true
       loop: "{{ range(0, server_count | int) | list }}"
       loop_control:
         index_var: idx
